@@ -1,0 +1,43 @@
+---
+#- name: Installing the firewall in RHEL
+#  yum:
+#    name: firewalld
+#    state: present
+
+#- name: Allowing ssh in RHEL
+#  firewalld:
+#    port: item/tcp
+#    permanent: yes
+#    state: enabled
+#  with_items:
+#  - ansible_ssh_port
+
+#- name: Reloading the firewall in RHEL
+#  command: firewall-cmd --reload 
+
+- name: Ensure that the firewall is up and running in RHEL
+  systemd:
+    enabled: true
+    state: started
+    name: firewalld
+
+- name: open management console port
+  firewalld:
+   port: 9100/tcp
+#  zone: public
+   permanent: yes
+   state: enabled
+   immediate: yes
+
+
+#- name: Opening nodes ip for each other in RHEL
+#  firewalld:
+#    rich_rule: rule family="ipv4" source address="{{item}}" accept
+#    permanent: yes
+#    state: enabled
+#  with_inventory_hostnames:
+#  - all
+
+- name: Reloading the firewall in RHEL
+  command: firewall-cmd --reload
+

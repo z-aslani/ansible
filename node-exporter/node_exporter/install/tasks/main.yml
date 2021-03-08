@@ -1,0 +1,17 @@
+---
+# tasks file for install
+- name: Download node exporter
+  import_tasks: node_expo.yml
+
+- name: Just force systemd to reload configs
+  systemd:
+    daemon_reload: yes
+
+#relocate to run section
+#- name: start
+#  systemd:
+#   name: node_exporter
+#   state: started
+#   enabled: yes
+
+

@@ -1,0 +1,32 @@
+---
+- name: prerequisites setup
+  hosts: scylla_staging
+  tasks:
+  - import_role:
+      name: prerequisites
+    vars:
+      allow_firewall_config: allow_firewall_config
+
+- name: installation
+  hosts: scylla_staging
+  tasks:
+  - import_role:
+      name: install
+    when: allow_install=='true'
+#    vars:
+#      allow_systemd_downgrade: allow_systemd_downgrade
+
+- name: configuration
+  hosts: scylla_staging
+  tasks:
+  - import_role:
+      name: config 
+    when: allow_config=='true'
+
+- name: starting the node exporter
+  hosts: scylla_staging
+  tasks:
+  - import_role:
+      name: run
+    when: allow_run=='true'
+

@@ -1,0 +1,107 @@
+---
+- hosts: scylla_staging
+  become: yes
+  become_user: root
+
+  tasks:
+  - name: Create a directory if it does not exist
+    file:
+      path: /opt/node_exporter/
+      state: directory
+      owner: root
+      group: root
+      mode: u+rtwX,g+rwX,o=rX
+
+  - name: Unarchive the node exporter file
+    unarchive:
+      src: https://github.com/prometheus/node_exporter/releases/download/v0.17.0/node_exporter-0.17.0.linux-amd64.tar.gz
+      dest:  /opt/node_exporter/
+      remote_src: yes
+
+  - name: Copy systemd service file to server
+    copy:
+      src: node_exporter.service
+      dest: /etc/systemd/system/node_exporter.service
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Just force systemd to reread configs
+    systemd:
+      daemon_reload: yes
+
+  - name: start
+    systemd:
+     name: node_exporter
+     state: started
+     enabled: yes
+
+  tasks:
+  - name: firewall
+    when: config_firewall=="true"
+    block:
+    - name: RHEL-based systems
+      when: ansible_facts['os_family']|lower == 'redhat'
+      block:
+      - name: Check firewalld status
+        command: systemctl status firewalld
+        register: result
+        ignore_errors: yes
+      - name: showing report
+        debug:
+         var: result
+
+      - name: edeaye khanum e aslan
+        firewalld:
+          zone: internal
+          interface: ens160
+          permanent: yes
+          state: enabled
+          immediate: yes
+
+      - name: open management console port
+        firewalld:
+          port: 9100/tcp
+          zone: internal
+          permanent: yes
+          state: enabled
+          immediate: yes
+
+    - name: Debian-based systems
+      when: ansible_facts['os_family']|lower == 'debian'
+      block:
+      - name: Check ufw status
+        command: ufw status
+        register: result
+        ignore_errors: yes
+      - name: showing report
+        debug:
+         var: result
+      - name: Allow all access to tcp port 9100
+        ufw:
+          rule: allow
+          port: '9100'
+          proto: tcp
+
+#   - name: Check if firewalld is running
+#     shell: systemctl status firewalld > cat
+# #    ignore_errors: yes
+#     changed_when: false
+#     register: service_firewalld_status
+
+# #  - name: Report status of Firewalld
+# #    fail:
+# #      msg: |
+# #             Service firewalld is not running.
+# #             Output of `systemctl status firewalld`:
+# #             {{ service_firewalld_status.stdout }}
+# #             {{ service_firewalld_status.stderr }}
+# #    when: service_firewalld_status | failed
+
+#   - name: open management console port
+#     firewalld:
+#       port: 9100/tcp
+#       zone: public
+#       permanent: true
+#       state: enabled
+#       immediate: yes

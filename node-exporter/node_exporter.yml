@@ -1,0 +1,39 @@
+---
+- name: prerequisites setup
+  hosts: hosts
+  tasks:
+  - import_role:
+      name: prerequisites
+    vars:
+      allow_firewall_config: allow_firewall_config
+
+- name: installation
+  hosts: hosts
+  tasks:
+  - import_role:
+      name: install
+    when: allow_install=='true'
+#    vars:
+#      allow_systemd_downgrade: allow_systemd_downgrade
+
+- name: configuration
+  hosts: hosts
+  tasks:
+  - import_role:
+      name: config 
+    when: allow_config=='true'
+
+- name: starting the node exporter
+  hosts: hosts
+  tasks:
+  - import_role:
+      name: run
+    when: allow_run=='true'
+
+#- name: Open up firewall port
+#  hosts: hosts
+#  tasks:
+#  - import_role:
+#      name: firewall
+#    when: allow_firewall=='true'
+

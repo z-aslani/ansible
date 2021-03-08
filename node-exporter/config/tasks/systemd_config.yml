@@ -1,0 +1,16 @@
+- name: Node exporter template
+  template:
+    src: templates/node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+
+#- name: Create a directory if it does not exist
+#  file:
+#    path: /opt/node_exporter/
+#    state: directory
+#    owner: root
+#    group: root
+#    mode: u+rtwX,g+rwX,o=rX
+

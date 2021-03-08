@@ -1,0 +1,10 @@
+---
+- name: initial config
+  hosts: Nodes
+  tasks:
+  - import_role:
+      name: config
+  - import_role:
+      name: install
+  - import_role:
+      name: node_exporter

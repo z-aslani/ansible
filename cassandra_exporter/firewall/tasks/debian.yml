@@ -1,0 +1,15 @@
+- name: Check ufw status
+  command: ufw status
+  register: result
+  ignore_errors: yes
+
+- name: showing report
+  debug:
+   var: result
+
+- name: Allow all access to tcp port 8080
+  ufw:
+    rule: allow
+    port: '8080'
+    proto: tcp
+

@@ -1,0 +1,9 @@
+---
+# tasks file for prerequisites
+- debug:
+    msg: "var is {{allow_firewall_config}}"
+- name: firewall configuration
+  import_role:
+    name: firewall
+  when: allow_firewall_config=='true'
+

@@ -1,0 +1,5 @@
+---
+# tasks file for config
+- name: systemd configuration
+  import_tasks: systemd_config.yml
+

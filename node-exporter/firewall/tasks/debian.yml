@@ -1,0 +1,41 @@
+---
+#- name: Installing the firewall in Debian
+#  apt:
+#    name: ufw
+#    update_cache: yes
+
+#- name: Ensuring the ssh connection is up in Debian
+#  ufw:
+#    rule: allow
+#    port: item
+#    proto: tcp
+#  with_items:
+#  - ansible_ssh_port
+
+- name: Check ufw status
+  command: ufw status
+  register: result
+  ignore_errors: yes
+
+- name: showing report
+  debug:
+   var: result
+
+- name: Allow all access to tcp port 9100
+  ufw:
+    rule: allow
+    port: '9100'
+    proto: tcp
+
+
+#- name: Enabling the firewall in Debian
+#  ufw:
+#    state: enabled
+#- name: .:(Debian):. allowing connection from other nodes
+#  ufw:
+#    rule: allow
+#    from_ip: item
+#    from_port: any
+#  with_inventory_hostnames:
+#    -all
+

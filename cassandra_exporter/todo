@@ -1,0 +1,2 @@
+ansible-playbook -i hosts cassandra_exporter.yml --extra-vars='{"allow_firewall_config":"ttrue" , "allow_clean_up":"ttrue" , "allow_install":"true" , "allow_config":"true" , "allow_run":"true"}'
+

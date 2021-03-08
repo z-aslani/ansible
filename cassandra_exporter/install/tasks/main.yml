@@ -1,0 +1,9 @@
+---
+# tasks file for install
+- name: Download cassandra exporter
+  import_tasks: cassandra_expo.yml
+
+- name: Just force systemd to reload configs
+  systemd:
+    daemon_reload: yes
+

@@ -1,0 +1,8 @@
+- name: Cassandra exporter template
+  template:
+    src: templates/cassandra_exporter.service
+    dest: /etc/systemd/system/cassandra_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+
